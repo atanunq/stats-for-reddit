@@ -18,6 +18,7 @@
   "homepage": "https://github.com/atanunq/reddit-stats#readme",
   "dependencies": {
     "express": "^4.15.3",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "snoowrap": "^1.14.1"
   }
 }
