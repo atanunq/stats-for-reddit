@@ -3,11 +3,11 @@ const snoowrap = require('snoowrap');
 const express = require('express');
 var config = require('./config');
 var app = express();
-
 const r = config.init();
-getUpvotedCount('atanunq');
+
+
 app.get('/', function (req, res) {
-  res.send("Kek");
+  getUpvotedCount('atanunq', 10, res);
 })
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
@@ -24,9 +24,9 @@ function findComments(user){
     }
   });
 }
-function getUpvotedCount(user){
+function getUpvotedCount(user, limit, res){
   var subredditNames = [];
-  r.getUser(user).getUpvotedContent({limit: Infinity}).then(value => {
+  r.getUser(user).getUpvotedContent({limit: limit}).then(value => {
     for (var i = 0; i < value.length; i++) {
       subredditNames.push(value[i].subreddit_name_prefixed);
     }
@@ -39,7 +39,15 @@ function getUpvotedCount(user){
     sortable.sort(function(a, b) {
         return b[1] - a[1];
     });
-    console.log(sortable)
+    var html = "<ul>";
+    for (var i = 0; i < sortable.length; i++) {
+      html += "<li>";
+      var display = sortable[i][0] + ' - ' + sortable[i][1];
+      html += display;
+      html += "</li>";
+    }
+    html += "</ul>"
+    res.send(html);
   });
 }
 //findComments('spez');
