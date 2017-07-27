@@ -9,7 +9,7 @@ app.set('views', './views')
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-  getUpvotedCount(r.username,30,res)
+  getUpvotedCount(r.username,10,res)
 })
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
@@ -46,7 +46,8 @@ function getUpvotedCount(user, limit, res){
     res.render('index', {
         subreddits: subreddits,
         user: user,
-        limit: limit
+        limit: limit,
+        value: value[0]
       });
   });
 }
