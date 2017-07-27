@@ -1,13 +1,15 @@
 const request = require('request');
-const snoowrap = require('snoowrap');
 const express = require('express');
-var config = require('./config');
-var app = express();
+const config = require('./config');
+const app = express();
 const r = config.init();
 
+//Load view engine
+app.set('views', './views')
+app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-  getUpvotedCount('atanunq', 10, res);
+  getUpvotedCount(r.username,30,res)
 })
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
@@ -24,6 +26,8 @@ function findComments(user){
     }
   });
 }
+//findComments('spez');
+
 function getUpvotedCount(user, limit, res){
   var subredditNames = [];
   r.getUser(user).getUpvotedContent({limit: limit}).then(value => {
@@ -32,22 +36,17 @@ function getUpvotedCount(user, limit, res){
     }
     var counts = {};
     subredditNames.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
-    var sortable = [];
+    var subreddits = [];
     for (var subreddit in counts) {
-        sortable.push([subreddit, counts[subreddit]]);
+        subreddits.push([subreddit, counts[subreddit]]);
     }
-    sortable.sort(function(a, b) {
+    subreddits.sort(function(a, b) {
         return b[1] - a[1];
     });
-    var html = "<ul>";
-    for (var i = 0; i < sortable.length; i++) {
-      html += "<li>";
-      var display = sortable[i][0] + ' - ' + sortable[i][1];
-      html += display;
-      html += "</li>";
-    }
-    html += "</ul>"
-    res.send(html);
+    res.render('index', {
+        subreddits: subreddits,
+        user: user,
+        limit: limit
+      });
   });
 }
-//findComments('spez');
