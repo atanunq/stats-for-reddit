@@ -1,0 +1,9 @@
+html
+  head
+    title Keys
+  body
+    include includes/header.pug
+    h2 A list of a reddit post's keys (#{post.title})
+    ol
+      each prop, key in post
+        li= key + ' - ' + prop

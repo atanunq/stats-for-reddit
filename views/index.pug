@@ -2,10 +2,8 @@ html
   head
     title Upvote counter
   body
-    h2 Most upvoted subreddits by #[u #{user}] with a limit of #[u #{limit}]
+    include includes/header.pug
+    h2 Most upvoted subreddits by u/#{user} with a limit of #{limit}
     ul
       each subreddit, i in subreddits
         li= subreddit[0] + ' - ' + subreddit[1]
-    ol
-      each prop, key in value
-        li= key
