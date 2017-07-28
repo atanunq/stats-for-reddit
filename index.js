@@ -10,7 +10,10 @@ app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  showUpvoted(r.username,10,res)
+  showUpvoted(r.username,25,res)
+})
+app.get('/authors', function(req, res){
+  showUpvotedAuthors(r.username,25,res)
 })
 app.get('/keys', function (req, res) {
   r.getSubmission('5by1wy').fetch().then(post =>{
@@ -18,9 +21,6 @@ app.get('/keys', function (req, res) {
       post: post
     })
   })
-})
-app.get('/authors', function(req, res){
-  showUpvotedAuthors(r.username,20,res)
 })
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
@@ -65,17 +65,25 @@ function showUpvoted(user, limit, res){
   var subredditNames = [];
   r.getUser(user).getUpvotedContent({limit: limit}).then(upvoted => {
     for (var i = 0; i < upvoted.length; i++) {
-      subredditNames.push(upvoted[i].subreddit_name_prefixed);
+      subredditNames.push({
+        subreddit_name: upvoted[i].subreddit_name_prefixed,
+        post: upvoted[i].id
+      });
     }
-    var counts = {};
-    subredditNames.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
-    var subreddits = [];
-    for (var subreddit in counts) {
-        subreddits.push([subreddit, counts[subreddit]]);
-    }
-    subreddits.sort(function(a, b) {
-        return b[1] - a[1];
+    var subreddits = {};
+    subredditNames.forEach(function(x) {
+      if(subreddits[x.subreddit_name]){
+        subreddits[x.subreddit_name].count ++;
+        subreddits[x.subreddit_name].posts.push(x.post)
+      } else {
+        subreddits[x.subreddit_name] = {
+          count: 1,
+          posts: [x.post]
+        }
+      }
     });
+
+    console.log(subreddits)
     res.render('index', {
         subreddits: subreddits,
         user: user,

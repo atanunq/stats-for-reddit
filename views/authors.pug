@@ -7,5 +7,5 @@ html
     ul
       each author, i in authors
         li
-          a(href='https://www.reddit.com/u/'+author[0])= author[0]
+          a(href='https://www.reddit.com/u/'+author[0]+'/submitted?sort=top')= author[0]
           = " - " + author[1]
