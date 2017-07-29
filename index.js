@@ -10,13 +10,13 @@ app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  showUpvoted(r.username,25,res)
+  showUpvoted(r.username,Infinity,res)
 })
 app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,25,res)
 })
 app.get('/keys', function (req, res) {
-  r.getSubmission('5by1wy').fetch().then(post =>{
+  r.getSubmission('6ov6cj').fetch().then(post =>{
     res.render('keys',{
       post: post
     })
@@ -67,7 +67,7 @@ function showUpvoted(user, limit, res){
     for (var i = 0; i < upvoted.length; i++) {
       subredditNames.push({
         subreddit_name: upvoted[i].subreddit_name_prefixed,
-        post: upvoted[i].id
+        post: upvoted[i]
       });
     }
     var subreddits = {};
@@ -83,7 +83,7 @@ function showUpvoted(user, limit, res){
       }
     });
 
-    console.log(subreddits)
+    //console.log(subreddits['r/Unexpected'])
     res.render('index', {
         subreddits: subreddits,
         user: user,

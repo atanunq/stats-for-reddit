@@ -6,5 +6,17 @@ html
     h2 Most upvoted subreddits by u/#{user} with a limit of #{limit}
     ul
       each subreddit, i in subreddits
-        li= i + " - " + subreddits[i].count
+        li 
+          span.accordion= i + " - " + subreddits[i].count
+          ol.invisible
+            each post, i in subreddit.posts
+              li
+                a(href=post.url target='_blank')
+                  p= post.title
+                  if !post.is_self && !post.over_18 && post.thumbnail != 'default' && post.thumbnail != 'image'
+                    img(src=post.thumbnail)
+                  else if post.thumbnail=='image'
+                    img(src=post.url)
+                    
+    script(src='/js/app.js')
     

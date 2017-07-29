@@ -1,3 +1,19 @@
 a, a:visited {
   text-decoration: none;
 }
+.accordion:hover {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    width: 25%;
+    border: none;
+    text-align: left;
+    outline: none;
+    transition: 0.4s;
+}
+.accordion.active {
+    background-color: #eee;
+}
+.invisible{
+  display: none;
+}
