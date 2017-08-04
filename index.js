@@ -10,10 +10,10 @@ app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  showUpvoted(r.username,Infinity,res)
+  showUpvoted(r.username,50,res)
 })
 app.get('/authors', function(req, res){
-  showUpvotedAuthors(r.username,25,res)
+  showUpvotedAuthors(r.username,50,res)
 })
 app.get('/keys', function (req, res) {
   r.getSubmission('6ov6cj').fetch().then(post =>{
@@ -70,18 +70,31 @@ function showUpvoted(user, limit, res){
         post: upvoted[i]
       });
     }
-    var subreddits = {};
+    var subreddits = [];
     subredditNames.forEach(function(x) {
-      if(subreddits[x.subreddit_name]){
-        subreddits[x.subreddit_name].count ++;
-        subreddits[x.subreddit_name].posts.push(x.post)
+      var found = false;
+      for(var i = 0; i < subreddits.length; i++) {
+          if (subreddits[i].subreddit_name == x.subreddit_name) {
+              found = true;
+              subreddit = subreddits[i];
+              break;
+          }
+      }
+      if(found){
+        subreddit.count ++;
+        subreddit.posts.push(x.post)
       } else {
-        subreddits[x.subreddit_name] = {
+        subreddits.push({
+          subreddit_name: x.subreddit_name,
           count: 1,
           posts: [x.post]
-        }
+        })
       }
     });
+    subreddits.sort(function(a,b){
+      return b.count-a.count;
+    })
+    //console.log(subreddits[0].posts[0].subreddit_name_prefixed);
 
     //console.log(subreddits['r/Unexpected'])
     res.render('index', {

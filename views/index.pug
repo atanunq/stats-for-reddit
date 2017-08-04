@@ -7,7 +7,7 @@ html
     ul
       each subreddit, i in subreddits
         li 
-          span.accordion= i + " - " + subreddits[i].count
+          span.accordion= subreddit.subreddit_name + " - " + subreddits[i].count
           ol.invisible
             each post, i in subreddit.posts
               li
