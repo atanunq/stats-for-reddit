@@ -14,9 +14,9 @@ html
                 a(href=post.url target='_blank')
                   p= post.title
                   if !post.is_self && !post.over_18 && post.thumbnail != 'default' && post.thumbnail != 'image'
-                    img(src=post.thumbnail)
+                    img(data-src=post.thumbnail)
                   else if post.thumbnail=='image'
-                    img(src=post.url)
+                    img(data-src=post.url)
                     
     script(src='/js/app.js')
     

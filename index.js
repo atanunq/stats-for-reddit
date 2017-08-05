@@ -10,7 +10,7 @@ app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  showUpvoted(r.username,50,res)
+  showUpvoted(r.username,100,res)
 })
 app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)
