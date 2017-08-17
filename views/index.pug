@@ -3,20 +3,40 @@ html
     title Upvote counter
   body
     include includes/header.pug
-    h2 Most upvoted subreddits by u/#{user} with a limit of #{limit}
-    ul
+    div.container
+      h2 Most upvoted subreddits by u/#{user} with a limit of #{limit}
+      div.row
+        div.panel-group#accordion
+          each subreddit, i in subreddits
+            div.panel.panel-default
+              div.panel-heading
+                h4.panel-title
+                  a(data-toggle="collapse" data-parent="#accordion" href="#collapse"+i)= subreddit.subreddit_name
+                  span.badge.badge-default.counter= subreddits[i].count
+              div(id="collapse"+i).panel-collapse.collapse
+                div.panel-body
+                  ul.list-group
+                    each post, j in subreddit.posts
+                      li.list-group-item
+                        div.d-flex.w-100.justify-content-between
+                          h4.mb-1= post.title
+                          //- TODO: show when was the post uploaded
+                          small.text-muted= post.created_utc
+                        p.mb-1 Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
+                        a(href="https://www.reddit.com/user/"+post.author.name+"/submitted?sort=top" target="_blank").text-mutedDonec Posted by #{post.author.name}
+  //
+    ul.list-group.row
       each subreddit, i in subreddits
-        li 
-          span.accordion= subreddit.subreddit_name + " - " + subreddits[i].count
-          ol.invisible
+        li.list-group-item.justify-content-between.col-md-4.accordion
+          span= subreddit.subreddit_name
+          span.badge.badge-default.badge-pill.counter= subreddits[i].count
+          ul.invisible
             each post, i in subreddit.posts
               li
                 a(href=post.url target='_blank')
-                  p= post.title
+                  = post.title
                   if !post.is_self && !post.over_18 && post.thumbnail != 'default' && post.thumbnail != 'image'
                     img(data-src=post.thumbnail)
                   else if post.thumbnail=='image'
                     img(data-src=post.url)
-                    
-    script(src='/js/app.js')
     
