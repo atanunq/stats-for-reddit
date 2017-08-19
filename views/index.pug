@@ -21,22 +21,6 @@ html
                         div.d-flex.w-100.justify-content-between
                           h4.mb-1= post.title
                           //- TODO: show when was the post uploaded
-                          small.text-muted= post.created_utc
+                          small.text-muted Posted #{post.postedAgo} on #{post.postedDate}
                         p.mb-1 Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
                         a(href="https://www.reddit.com/user/"+post.author.name+"/submitted?sort=top" target="_blank").text-mutedDonec Posted by #{post.author.name}
-  //
-    ul.list-group.row
-      each subreddit, i in subreddits
-        li.list-group-item.justify-content-between.col-md-4.accordion
-          span= subreddit.subreddit_name
-          span.badge.badge-default.badge-pill.counter= subreddits[i].count
-          ul.invisible
-            each post, i in subreddit.posts
-              li
-                a(href=post.url target='_blank')
-                  = post.title
-                  if !post.is_self && !post.over_18 && post.thumbnail != 'default' && post.thumbnail != 'image'
-                    img(data-src=post.thumbnail)
-                  else if post.thumbnail=='image'
-                    img(data-src=post.url)
-    
