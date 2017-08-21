@@ -17,7 +17,7 @@ app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)
 })
 app.get('/keys', function (req, res) {
-  r.getSubmission('6ov6cj').fetch().then(post =>{
+  r.getSubmission('6sdbax').fetch().then(post =>{
     res.render('keys',{
       post: post
     })
