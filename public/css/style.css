@@ -5,3 +5,7 @@ a, a:visited {
   background-color: #636c72;
   float:right;
 }
+.controlled-width{
+  max-width: 800px;
+  max-height: 1000px;
+}

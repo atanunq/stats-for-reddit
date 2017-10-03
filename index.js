@@ -10,14 +10,22 @@ app.set('views', './views')
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
+// Routes
 app.get('/', function (req, res) {
-  showUpvoted(r.username,25,res)
+  showUpvoted(r.username,100,res)
 })
 app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)
 })
+app.get('/sandbox', function(req, res){
+  r.getSubmission('7011wo').fetch().then(post =>{
+    res.render('sandbox',{
+      post: post
+    })
+  })
+})
 app.get('/keys', function (req, res) {
-  r.getSubmission('6sdbax').fetch().then(post =>{
+  r.getSubmission('7011wo').fetch().then(post =>{
     res.render('keys',{
       post: post
     })
@@ -27,6 +35,7 @@ app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
 
+/* v_1 of find comments function
 function findComments(user){
   request('https://www.reddit.com/user/' + user + '/.json', function (error, response, body) {
     var dataJSON = JSON.parse(body);
@@ -38,7 +47,8 @@ function findComments(user){
     }
   });
 }
-//findComments('spez');
+findComments('spez');
+*/
 function showUpvotedAuthors(user, limit, res){
   var authorNames = [];
   r.getUser(user).getUpvotedContent({limit:limit}).then(upvoted => {

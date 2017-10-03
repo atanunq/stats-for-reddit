@@ -24,7 +24,7 @@ html
                           if post.media_embed.content
                             != post.media_embed.content
                           else
-                            img(src=post.url)
+                            img(src=post.url).controlled-width
                         div.d-flex.w-100.justify-content-between
                           h4.mb-1
                             a(href="https://www.reddit.com"+post.permalink target="_blank")= post.title
