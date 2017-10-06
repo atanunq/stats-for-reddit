@@ -12,20 +12,22 @@ app.use(express.static(__dirname + '/public'));
 
 // Routes
 app.get('/', function (req, res) {
-  showUpvoted(r.username,100,res)
+  showUpvoted(r.username,25,res)
 })
 app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)
 })
 app.get('/sandbox', function(req, res){
-  r.getSubmission('7011wo').fetch().then(post =>{
-    res.render('sandbox',{
-      post: post
+    r.getSubmission('73mgp9').fetch().then(post => {
+        post.url = changeGifvExtention(post.url);
+        console.log(post.media);
+        res.render('sandbox',{
+          post: post
+        })
     })
-  })
 })
 app.get('/keys', function (req, res) {
-  r.getSubmission('7011wo').fetch().then(post =>{
+    r.getSubmission('73mgp9').fetch().then(post => {
     res.render('keys',{
       post: post
     })
@@ -49,6 +51,14 @@ function findComments(user){
 }
 findComments('spez');
 */
+function changeGifvExtention(url) {
+    // TODO: find a fix for the v.reddit videos
+    var parts = url.split(".");
+    if (parts[parts.length - 1] == "gifv") {
+        parts[parts.length - 1] = "gif";
+    }
+    return parts.join('.');
+}
 function showUpvotedAuthors(user, limit, res){
   var authorNames = [];
   r.getUser(user).getUpvotedContent({limit:limit}).then(upvoted => {
@@ -101,14 +111,18 @@ function showUpvoted(user, limit, res){
         })
       }
     });
-    subreddits.sort(function(a,b){
-      return b.count-a.count;
-    })
+    subreddits.sort(function (a, b) {
+        return b.count - a.count;
+    });
+    // add postedAgo and postedDate properties to every element
     for(var i = 0; i < subreddits.length; i++) {
       for(var j = 0;j < subreddits[i].posts.length; j++){
-        var day=moment.unix(subreddits[i].posts[j].created_utc);
-        subreddits[i].posts[j].postedAgo = day.fromNow(false,'d');
-        subreddits[i].posts[j].postedDate = day.format("DD MMMM YYYY")
+        var day = moment.unix(subreddits[i].posts[j].created_utc);
+        var currentElement = subreddits[i].posts[j];
+        currentElement.postedAgo = day.fromNow(false,'d');
+        currentElement.postedDate = day.format("DD MMMM YYYY");
+          // change every .gifv extention to .gif
+        currentElement.url = changeGifvExtention(currentElement.url);
       }
     }
     //console.log(subreddits[0].posts[0].subreddit_name_prefixed);
