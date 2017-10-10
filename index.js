@@ -18,16 +18,21 @@ app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)
 })
 app.get('/sandbox', function(req, res){
-    r.getSubmission('73mgp9').fetch().then(post => {
-        post.url = changeGifvExtention(post.url);
-        console.log(post.media);
+		r.getSubmission('74f01f').fetch().then(post => {
+				if (!post.media) {
+						post.url = changeGifvExtention(post.url);
+						post.embedPost = false;
+				} else {
+						post.embedPost = true;
+				}
+				console.log(post.media);
         res.render('sandbox',{
           post: post
         })
     })
 })
 app.get('/keys', function (req, res) {
-    r.getSubmission('73mgp9').fetch().then(post => {
+		r.getSubmission('72ro7r').fetch().then(post => {
     res.render('keys',{
       post: post
     })
@@ -117,12 +122,17 @@ function showUpvoted(user, limit, res){
     // add postedAgo and postedDate properties to every element
     for(var i = 0; i < subreddits.length; i++) {
       for(var j = 0;j < subreddits[i].posts.length; j++){
-        var day = moment.unix(subreddits[i].posts[j].created_utc);
         var currentElement = subreddits[i].posts[j];
+				var day = moment.unix(currentElement.created_utc);
         currentElement.postedAgo = day.fromNow(false,'d');
         currentElement.postedDate = day.format("DD MMMM YYYY");
           // change every .gifv extention to .gif
-        currentElement.url = changeGifvExtention(currentElement.url);
+				if (!currentElement.media) {
+						currentElement.url = changeGifvExtention(currentElement.url);
+						currentElement.embedPost = false;
+				} else {
+						currentElement.embedPost = true;
+				}
       }
     }
     //console.log(subreddits[0].posts[0].subreddit_name_prefixed);

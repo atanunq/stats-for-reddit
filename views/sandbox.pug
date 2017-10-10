@@ -4,4 +4,9 @@ html
   body
     include includes/header.pug
     div.container
-      img(src="https://i.imgur.com/9YyPFbq.gif")
+      if post.media_embed.content
+        != post.media_embed.content
+      else if post.embedPost
+        iframe(src=post.media.reddit_video.fallback_url height=post.media.reddit_video.height width=post.media.reddit_video.width)
+      else
+        img(src=post.url).controlled-width
