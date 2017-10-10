@@ -1,5 +1,5 @@
 # reddit-stats
-In order for the index.js script to work, you must create a `config.js` file such as in the example below :
+In order for the index.js script to work, you must edit the `config.js` file such as in the example below :
 ```javascript
 const snoowrap = require('snoowrap');
 module.exports = {
