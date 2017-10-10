@@ -25,14 +25,13 @@ app.get('/sandbox', function(req, res){
 				} else {
 						post.embedPost = true;
 				}
-				console.log(post.media);
         res.render('sandbox',{
           post: post
         })
     })
 })
 app.get('/keys', function (req, res) {
-		r.getSubmission('72ro7r').fetch().then(post => {
+    r.getSubmission('750jsa').fetch().then(post => {
     res.render('keys',{
       post: post
     })
