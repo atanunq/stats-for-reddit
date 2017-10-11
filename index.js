@@ -37,6 +37,13 @@ app.get('/keys', function (req, res) {
     })
   })
 })
+app.get('/keys/:id', function (req, res) {
+    r.getSubmission(req.params.id).fetch().then(post => {
+    res.render('keys',{
+      post: post
+    })
+  })
+})
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
