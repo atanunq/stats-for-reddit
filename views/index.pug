@@ -1,13 +1,12 @@
 html
   head
     title Upvote counter
-    script(src="/js/main.js")
   body
     include includes/header.pug
     div.container
       h2 Most upvoted subreddits by u/#{user} with a limit of #{limit}
       div.row
-        div.panel-group#accordion
+        div.panel-group#accordion.parent-accordion
           each subreddit, i in subreddits
             div.panel.panel-default
               div.panel-heading
@@ -29,9 +28,11 @@ html
                           else if post.thumbnail == "self"
                             p.mb-1!= post.selftext_html
                           else
-                            img(src=post.url).controlled-width
+                            img(data-src=post.url).controlled-width
                         div.d-flex.w-100.justify-content-between
                           h4.mb-1
                             a(href="https://www.reddit.com"+post.permalink target="_blank")= post.title
                           small.text-muted Posted #{post.postedAgo} on #{post.postedDate}
                         a(href="https://www.reddit.com/user/"+post.author.name+"/submitted?sort=top" target="_blank").text-mutedDonec Posted by #{post.author.name}
+                        
+  script(src="/js/main.js")

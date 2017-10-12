@@ -6,6 +6,6 @@ a, a:visited {
   float:right;
 }
 .controlled-width{
-  max-width: 800px;
-  max-height: 1000px;
+  max-width: 700px;
+  max-height: 900px;
 }
