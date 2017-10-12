@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Routes
 app.get('/', function (req, res) {
-  showUpvoted(r.username,25,res)
+  showUpvoted(r.username,50,res)
 })
 app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)

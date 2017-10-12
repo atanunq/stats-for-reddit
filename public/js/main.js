@@ -2,7 +2,8 @@ $(".parent-accordion").on('hidden.bs.collapse', function(){
     $(".plus").next().collapse('hide');
 });
 $(".parent-accordion").on('show.bs.collapse', function(e){
-    //console.log($(e.target).data('bs.collapse').$trigger);
-    // for refence :
-    //https://stackoverflow.com/questions/30596773/how-to-get-the-clicked-element-in-bootstrap-collapse-event
+    var element = $(e.target).find('img, video');
+    console.log(element);
+    var src = element.attr('data-src');
+    element.attr('src', src);
 });
