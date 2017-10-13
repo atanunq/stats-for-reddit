@@ -9,3 +9,14 @@ a, a:visited {
   max-width: 700px;
   max-height: 900px;
 }
+.plus{
+  width: 27px;
+  height: 27px;
+}
+.plus:hover{
+  border-radius: 20px;
+  background-color: grey;
+}
+.plus:active{
+  background-color: #565456;
+}

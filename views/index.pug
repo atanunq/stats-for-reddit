@@ -18,8 +18,7 @@ html
                   ul.list-group
                     each post, j in subreddit.posts
                       li.list-group-item
-                        //- TODO: fix plus
-                        a(data-toggle="collapse" href="#collapse"+i+"-"+j).plus PLUS
+                        img(data-toggle="collapse" href="#collapse"+i+"-"+j src='/img/plus.png').plus
                         div(id="collapse"+i+"-"+j).panel-collapse.collapse
                           if post.media_embed.content
                             != post.media_embed.content
@@ -34,5 +33,4 @@ html
                             a(href="https://www.reddit.com"+post.permalink target="_blank")= post.title
                           small.text-muted Posted #{post.postedAgo} on #{post.postedDate}
                         a(href="https://www.reddit.com/user/"+post.author.name+"/submitted?sort=top" target="_blank").text-mutedDonec Posted by #{post.author.name}
-                        
   script(src="/js/main.js")

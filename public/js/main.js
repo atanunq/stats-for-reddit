@@ -2,8 +2,9 @@ $(".parent-accordion").on('hidden.bs.collapse', function(){
     $(".plus").next().collapse('hide');
 });
 $(".parent-accordion").on('show.bs.collapse', function(e){
-    var element = $(e.target).find('img, video');
-    console.log(element);
-    var src = element.attr('data-src');
-    element.attr('src', src);
+    var elements = $(e.target).find('img.controlled-width, video');
+    for(var i=0;i<elements.length;i++){
+      var src = $(elements[i]).attr('data-src');
+      $(elements[i]).attr('src', src);
+    }
 });
