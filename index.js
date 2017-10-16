@@ -3,7 +3,8 @@ const express = require('express');
 const config = require('./config');
 const app = express();
 const r = config.init();
-const moment = require('moment')
+const snoowrap = require('snoowrap');
+const moment = require('moment');
 
 //Load view engine
 app.set('views', './views')
@@ -18,17 +19,42 @@ app.get('/authors', function(req, res){
   showUpvotedAuthors(r.username,50,res)
 })
 app.get('/sandbox', function(req, res){
-		r.getSubmission('74f01f').fetch().then(post => {
+      r.getSubmission('74f01f').fetch().then(post => {
 				if (!post.media) {
 						post.url = changeGifvExtention(post.url);
 						post.embedPost = false;
 				} else {
 						post.embedPost = true;
 				}
-        res.render('sandbox',{
+        res.render('sandbox', {
           post: post
         })
     })
+})
+app.get('/authenticate', function(req, res){
+    var authenticationUrl = snoowrap.getAuthUrl({
+      clientId: 'clientId of web app',
+      scope: ['identity history'],
+      redirectUri: 'http://localhost:3000/success',
+      permanent: false,
+      state: 'fe211bebc52eb3da9bef8db6e63104d3'
+  });
+  res.redirect(authenticationUrl);
+})
+app.get('/success', function (req, res) {
+  res.render('success',{
+    req: req
+  })
+  var code = req.query.code;
+  snoowrap.fromAuthCode({
+    code: code,
+    userAgent: 'stats-for-reddit 1.0.0 by u/atanunq',
+    clientId: 'clientId of web app',
+    clientSecret: 'clientSecret of web app',
+    redirectUri: 'http://localhost:3000/success'
+  }).then(r => {
+      r.getMe().then(console.log)
+  })
 })
 app.get('/keys', function (req, res) {
     r.getSubmission('750jsa').fetch().then(post => {
