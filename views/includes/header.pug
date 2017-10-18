@@ -1,15 +1,17 @@
 div.navbar.navbar-default
   ul.nav.navbar-nav
-    li
-      a(href='/upvoted') Upvoted
-    li
-      a(href='/keys') Keys
-    li
-      a(href='/authors') Authors
-    li
-      a(href='/sandbox') Sandbox
-    li
-      a(href='/authenticate') Authenticate
+    if doNotShowHeaders
+      li
+        a(href='/authenticate') Authenticate
+    else
+      li
+        a(href='/upvoted') Upvoted
+      li
+        a(href='/keys') Keys
+      li
+        a(href='/authors') Authors
+      li
+        a(href='/sandbox') Sandbox
 
 link(rel='stylesheet', href='/css/style.css')
 link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
