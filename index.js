@@ -1,17 +1,15 @@
 const request = require('request');
 const express = require('express');
-const config = require('./config');
 const app = express();
-//const r = config.init();
 const snoowrap = require('snoowrap');
-var re = null;
+var instancePromise = null;
 const moment = require('moment');
 //Load view engine
 app.set('views', './views')
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 app.use(function (req, res, next) {
-  if(re || req.originalUrl == '/authenticate' || req.query.state == "fe211bebc52eb3da9bef8db6e63104d3") next()
+  if(instancePromise || req.originalUrl == '/authenticate' || req.query.state == "fe211bebc52eb3da9bef8db6e63104d3") next()
   //TODO: redirect unauthenticated users
   else res.render("index", {
     doNotShowHeaders: true
@@ -22,7 +20,7 @@ const clientSecret = process.env.REDDIT_CLIENT_SECRET;
 // Routes
 app.get('/', function (req, res) {
   try{
-    re.then(r => {
+    instancePromise.then(r => {
       r.getMe().then(user => {
         showUpvoted(user,50,res)
       })
@@ -33,14 +31,14 @@ app.get('/', function (req, res) {
   }
 })
 app.get('/upvoted', function (req, res) {
-  re.then(r => {
+  instancePromise.then(r => {
     r.getMe().then(user => {
       showUpvoted(user,50,res)
     })
   })
 })
 app.get('/authors', function(req, res){
-  re.then(r => {
+  instancePromise.then(r => {
     r.getMe().then(user => {
       showUpvotedAuthors(user,50,res)
     })
@@ -48,7 +46,7 @@ app.get('/authors', function(req, res){
 
 })
 app.get('/sandbox', function(req, res){
-  re.then(r => {
+  instancePromise.then(r => {
     r.getSubmission('74f01f').fetch().then(post => {
       if (!post.media) {
         post.url = changeGifvExtention(post.url);
@@ -63,7 +61,7 @@ app.get('/sandbox', function(req, res){
   })
 })
 app.get('/keys', function (req, res) {
-  re.then(r => {
+  instancePromise.then(r => {
     r.getSubmission('750jsa').fetch().then(post => {
       res.render('keys',{
         post: post
@@ -83,7 +81,7 @@ app.get('/authenticate', function(req, res){
 })
 app.get('/success', function (req, res) {
   var code = req.query.code;
-  re = snoowrap.fromAuthCode({
+  instancePromise = snoowrap.fromAuthCode({
     code: code,
     userAgent: 'stats-for-reddit 1.0.0 by u/atanunq',
     clientId: clientId,
