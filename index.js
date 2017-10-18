@@ -11,22 +11,33 @@ app.set('views', './views')
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 app.use(function (req, res, next) {
-  if(re || req.originalUrl == '/authenticate') next()
+  if(re || req.originalUrl == '/authenticate' || req.query.state == "fe211bebc52eb3da9bef8db6e63104d3") next()
   //TODO: redirect unauthenticated users
-  //else res.render("index")
+  else res.render("index", {
+    doNotShowHeaders: true
+  })
 })
 const clientId = process.env.REDDIT_CLIENT_ID;
 const clientSecret = process.env.REDDIT_CLIENT_SECRET;
 // Routes
 app.get('/', function (req, res) {
-  res.render('index');
+  try{
+    re.then(r => {
+      r.getMe().then(user => {
+        showUpvoted(user,50,res)
+      })
+    })
+  }
+  catch (e) {
+    res.render('index');
+  }
 })
 app.get('/upvoted', function (req, res) {
   re.then(r => {
     r.getMe().then(user => {
       showUpvoted(user,50,res)
     })
-  });
+  })
 })
 app.get('/authors', function(req, res){
   re.then(r => {
@@ -181,7 +192,7 @@ function showUpvoted(user, limit, res){
     //console.log(subreddits[0].posts[0].subreddit_name_prefixed);
 
     //console.log(subreddits['r/Dota2'])
-    res.render('index', {
+    res.render('upvoted', {
         subreddits: subreddits,
         user: user,
         limit: limit
