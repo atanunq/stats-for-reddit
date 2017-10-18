@@ -1,40 +1,78 @@
 const request = require('request');
 const express = require('express');
-const config = require('./config');
 const app = express();
-const r = config.init();
 const snoowrap = require('snoowrap');
+var instancePromise = null;
 const moment = require('moment');
-
 //Load view engine
 app.set('views', './views')
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
-
+app.use(function (req, res, next) {
+  if(instancePromise || req.originalUrl == '/authenticate' || req.query.state == "fe211bebc52eb3da9bef8db6e63104d3") next()
+  //TODO: redirect unauthenticated users
+  else res.render("index", {
+    doNotShowHeaders: true
+  })
+})
+const clientId = process.env.REDDIT_CLIENT_ID;
+const clientSecret = process.env.REDDIT_CLIENT_SECRET;
 // Routes
 app.get('/', function (req, res) {
-  showUpvoted(r.username,50,res)
+  try{
+    instancePromise.then(r => {
+      r.getMe().then(user => {
+        showUpvoted(user,50,res)
+      })
+    })
+  }
+  catch (e) {
+    res.render('index');
+  }
+})
+app.get('/upvoted', function (req, res) {
+  instancePromise.then(r => {
+    r.getMe().then(user => {
+      showUpvoted(user,50,res)
+    })
+  })
 })
 app.get('/authors', function(req, res){
-  showUpvotedAuthors(r.username,50,res)
+  instancePromise.then(r => {
+    r.getMe().then(user => {
+      showUpvotedAuthors(user,50,res)
+    })
+  })
+
 })
 app.get('/sandbox', function(req, res){
-      r.getSubmission('74f01f').fetch().then(post => {
-				if (!post.media) {
-						post.url = changeGifvExtention(post.url);
-						post.embedPost = false;
-				} else {
-						post.embedPost = true;
-				}
-        res.render('sandbox', {
-          post: post
-        })
+  instancePromise.then(r => {
+    r.getSubmission('74f01f').fetch().then(post => {
+      if (!post.media) {
+        post.url = changeGifvExtention(post.url);
+        post.embedPost = false;
+      } else {
+        post.embedPost = true;
+      }
+      res.render('sandbox', {
+        post: post
+      })
     })
+  })
+})
+app.get('/keys', function (req, res) {
+  instancePromise.then(r => {
+    r.getSubmission('750jsa').fetch().then(post => {
+      res.render('keys',{
+        post: post
+      })
+    })
+  })
 })
 app.get('/authenticate', function(req, res){
     var authenticationUrl = snoowrap.getAuthUrl({
-      clientId: 'clientId of web app',
-      scope: ['identity history'],
+      clientId: clientId,
+      scope: ['identity history read'],
       redirectUri: 'http://localhost:3000/success',
       permanent: false,
       state: 'fe211bebc52eb3da9bef8db6e63104d3'
@@ -42,35 +80,17 @@ app.get('/authenticate', function(req, res){
   res.redirect(authenticationUrl);
 })
 app.get('/success', function (req, res) {
-  res.render('success',{
-    req: req
-  })
   var code = req.query.code;
-  snoowrap.fromAuthCode({
+  instancePromise = snoowrap.fromAuthCode({
     code: code,
     userAgent: 'stats-for-reddit 1.0.0 by u/atanunq',
-    clientId: 'clientId of web app',
-    clientSecret: 'clientSecret of web app',
+    clientId: clientId,
+    clientSecret: clientSecret,
     redirectUri: 'http://localhost:3000/success'
-  }).then(r => {
-      r.getMe().then(console.log)
   })
+  res.render("success");
 })
-app.get('/keys', function (req, res) {
-    r.getSubmission('750jsa').fetch().then(post => {
-    res.render('keys',{
-      post: post
-    })
-  })
-})
-app.get('/keys/:id', function (req, res) {
-    r.getSubmission(req.params.id).fetch().then(post => {
-    res.render('keys',{
-      post: post
-    })
-  })
-})
-app.listen(3000, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log('Example app listening on port 3000!')
 })
 
@@ -98,7 +118,7 @@ function changeGifvExtention(url) {
 }
 function showUpvotedAuthors(user, limit, res){
   var authorNames = [];
-  r.getUser(user).getUpvotedContent({limit:limit}).then(upvoted => {
+  user.getUpvotedContent({limit:limit}).then(upvoted => {
     for (var i = 0; i < upvoted.length; i++) {
       authorNames.push(upvoted[i].author.name);
     }
@@ -121,7 +141,7 @@ function showUpvotedAuthors(user, limit, res){
 
 function showUpvoted(user, limit, res){
   var subredditNames = [];
-  r.getUser(user).getUpvotedContent({limit: limit}).then(upvoted => {
+  user.getUpvotedContent({limit: limit}).then(upvoted => {
     for (var i = 0; i < upvoted.length; i++) {
       subredditNames.push({
         subreddit_name: upvoted[i].subreddit_name_prefixed,
@@ -170,7 +190,7 @@ function showUpvoted(user, limit, res){
     //console.log(subreddits[0].posts[0].subreddit_name_prefixed);
 
     //console.log(subreddits['r/Dota2'])
-    res.render('index', {
+    res.render('upvoted', {
         subreddits: subreddits,
         user: user,
         limit: limit

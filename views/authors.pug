@@ -3,7 +3,7 @@ html
     title Upvoted authors
   body
     include includes/header.pug
-    h2 List of most upvoted authors by u/#{user} with a limit of #{limit}
+    h2 List of most upvoted authors by u/#{user.name} with a limit of #{limit}
     ul
       each author, i in authors
         li

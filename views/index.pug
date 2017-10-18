@@ -1,36 +1,8 @@
 html
   head
-    title Upvote counter
+    title Stats for Reddit
   body
     include includes/header.pug
     div.container
-      h2 Most upvoted subreddits by u/#{user} with a limit of #{limit}
-      div.row
-        div.panel-group#accordion.parent-accordion
-          each subreddit, i in subreddits
-            div.panel.panel-default
-              div.panel-heading
-                h4.panel-title
-                  a(data-toggle="collapse" data-parent="#accordion" href="#collapse"+i)= subreddit.subreddit_name
-                  span.badge.badge-default.counter= subreddits[i].count
-              div(id="collapse"+i).panel-collapse.collapse
-                div.panel-body
-                  ul.list-group
-                    each post, j in subreddit.posts
-                      li.list-group-item
-                        img(data-toggle="collapse" href="#collapse"+i+"-"+j src='/img/plus.png').plus
-                        div(id="collapse"+i+"-"+j).panel-collapse.collapse
-                          if post.media_embed.content
-                            != post.media_embed.content
-                          else if post.embedPost
-                            video(data-src=post.media.reddit_video.fallback_url height=post.media.reddit_video.height width=post.media.reddit_video.width controls)
-                          else if post.thumbnail == "self"
-                            p.mb-1!= post.selftext_html
-                          else
-                            img(data-src=post.url).controlled-width
-                        div.d-flex.w-100.justify-content-between
-                          h4.mb-1
-                            a(href="https://www.reddit.com"+post.permalink target="_blank")= post.title
-                          small.text-muted Posted #{post.postedAgo} on #{post.postedDate}
-                        a(href="https://www.reddit.com/user/"+post.author.name+"/submitted?sort=top" target="_blank").text-mutedDonec Posted by #{post.author.name}
-  script(src="/js/main.js")
+      h2 Welcome to Stats for Reddit !
+      h3 Please authenticate in order to use the Reddit API and discover your most upvoted subreddits and authors.
