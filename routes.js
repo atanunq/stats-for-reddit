@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const routesCtrl = require('./routesController');
+const routeCtrl = require('./routesController');
+const chartsCtrl = require('./chartsController');
 var instancePromise = null;
 const snoowrap = require('snoowrap');
 module.exports = function(app){
@@ -41,7 +42,9 @@ module.exports = function(app){
   })
   app.get('/charts', function(req, res) {
     instancePromise.then(r => {
-      res.render('charts');
+      r.getMe().then(user => {
+        chartsCtrl.test(user);
+      })
     })
   })
   app.get('/authors', function(req, res){
