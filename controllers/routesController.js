@@ -77,7 +77,6 @@ function getUpvotedData(user, limit, upvoted){
   }
   return subreddits;
 }
-
 function showUpvoted(user, limit, res){
   user.getUpvotedContent({limit: limit}).then(upvoted => {
     var data = getUpvotedData(user, limit, upvoted);

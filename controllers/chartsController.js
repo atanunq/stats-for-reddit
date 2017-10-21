@@ -1,9 +1,15 @@
-function createChart(dataKek, res){
-  var data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+function createChart(data, res){
+  var labels = [];
+  var count = [];
+  for(var i=0;i<data.length;i++){
+    labels.push(data[i].subreddit_name);
+    count.push(data[i].count);
+  }
+  var chartData = {
+    labels: labels,
     datasets: [{
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
+      label: '# of Upvotes',
+      data: count,
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -27,14 +33,14 @@ function createChart(dataKek, res){
     scales: {
       yAxes: [{
         ticks: {
-          beginAtZero:true
+          min:0
         }
       }]
     }
   };
 
   res.render('charts',{
-    data: JSON.stringify(data),
+    data: JSON.stringify(chartData),
     options: JSON.stringify(options)
   })
 }
