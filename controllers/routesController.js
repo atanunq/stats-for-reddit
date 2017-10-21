@@ -28,7 +28,7 @@ function showUpvotedAuthors(user, limit, res){
       });
   })
 }
-function getUpvotedData(user, limit, res, upvoted){
+function getUpvotedData(user, limit, upvoted){
   var subredditNames = [];
   for (var i = 0; i < upvoted.length; i++) {
     subredditNames.push({
@@ -80,7 +80,7 @@ function getUpvotedData(user, limit, res, upvoted){
 
 function showUpvoted(user, limit, res){
   user.getUpvotedContent({limit: limit}).then(upvoted => {
-    var data = getUpvotedData(user, limit, res, upvoted);
+    var data = getUpvotedData(user, limit, upvoted);
 
     //console.log(subreddits[0].posts[0].subreddit_name_prefixed);
     //console.log(subreddits['r/Dota2'])
@@ -93,5 +93,6 @@ function showUpvoted(user, limit, res){
 }
 module.exports = {
   showUpvotedAuthors: showUpvotedAuthors,
+  getUpvotedData: getUpvotedData,
   showUpvoted: showUpvoted
 }

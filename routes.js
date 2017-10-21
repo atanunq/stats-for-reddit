@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-const routeCtrl = require('./routesController');
-const chartsCtrl = require('./chartsController');
+const routeCtrl = require('./controllers/routesController');
+const chartsCtrl = require('./controllers/chartsController');
 var instancePromise = null;
 const snoowrap = require('snoowrap');
 module.exports = function(app){
@@ -41,9 +41,13 @@ module.exports = function(app){
     })
   })
   app.get('/charts', function(req, res) {
+    var limit = 50;
     instancePromise.then(r => {
       r.getMe().then(user => {
-        chartsCtrl.test(user);
+        user.getUpvotedContent({limit: limit}).then(upvoted => {
+          var data = routeCtrl.getUpvotedData(user, limit, upvoted);
+          chartsCtrl.createChart(data, res);
+        });
       })
     })
   })
