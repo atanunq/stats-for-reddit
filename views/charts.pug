@@ -9,6 +9,7 @@ html
     script(src='scripts/Chart.min.js')
     script.
       var ctx = document.getElementById("myChart");
+      console.log(!{data});
       var myChart = new Chart(ctx, {
         type: 'bar',
         data: !{data},
