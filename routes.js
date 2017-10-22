@@ -16,7 +16,7 @@ module.exports = function(app){
     try{
       instancePromise.then(r => {
         r.getMe().then(user => {
-          routeCtrl.showUpvoted(user,50,res)
+          routeCtrl.showUpvoted(user,100,res)
         })
       })
     }
@@ -27,13 +27,13 @@ module.exports = function(app){
   app.get('/upvoted', function (req, res) {
     instancePromise.then(r => {
       r.getMe().then(user => {
-        routeCtrl.showUpvoted(user,50,res)
+        routeCtrl.showUpvoted(user,100,res)
       })
     })
   })
   app.get('/keys', function (req, res) {
     instancePromise.then(r => {
-      r.getSubmission('750jsa').fetch().then(post => {
+      r.getSubmission('5sl52a').fetch().then(post => {
         res.render('keys',{
           post: post
         })
@@ -41,12 +41,12 @@ module.exports = function(app){
     })
   })
   app.get('/charts', function(req, res) {
-    var limit = 50;
+    var limit = 100;
     instancePromise.then(r => {
       r.getMe().then(user => {
         user.getUpvotedContent({limit: limit}).then(upvoted => {
           var data = routeCtrl.getUpvotedData(user, limit, upvoted);
-          chartsCtrl.createChart(data, res);
+          chartsCtrl.createChart(data, limit, res);
         });
       })
     })

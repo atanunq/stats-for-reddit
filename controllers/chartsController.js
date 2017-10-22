@@ -1,35 +1,42 @@
-function createChart(data, res){
+function createChart(data, limit, res){
   var labels = [];
   var count = [];
+  var backgroundColor = [];
+  var hoverBackgroundColor = [];
+  var borderColor = [];
   for(var i=0;i<data.length;i++){
-    labels.push(data[i].subreddit_name);
-    count.push(data[i].count);
+    if(data[i].count > 1){
+      labels.push(data[i].subreddit_name);
+      count.push(data[i].count);
+      rgb = [
+        Math.random()*255,
+        Math.random()*255,
+        Math.random()*255
+      ]
+      backgroundColor.push("rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", 0.5)");
+      hoverBackgroundColor.push("rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", 1)");
+      borderColor.push("rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", 1)");
+    }
   }
   var chartData = {
     labels: labels,
     datasets: [{
-      label: '# of Upvotes',
       data: count,
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
-      ],
-      borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
+      backgroundColor: backgroundColor,
+      hoverBackgroundColor: hoverBackgroundColor,
+      borderColor: borderColor,
       borderWidth: 1
     }]
   };
   var options = {
+    legend: {
+      display: false
+    },
+    title: {
+      display: true,
+      text: '# of Upvotes out of the last ' + limit + ' upvotes',
+      fontSize: 20
+    },
     scales: {
       yAxes: [{
         ticks: {
