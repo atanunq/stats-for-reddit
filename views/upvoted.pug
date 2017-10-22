@@ -23,11 +23,12 @@ html
                           if post.media_embed.content
                             != post.media_embed.content
                           else if post.embedPost
-                            video(data-src=post.media.reddit_video.fallback_url height=post.media.reddit_video.height width=post.media.reddit_video.width controls)
+                            video(data-src=post.media.reddit_video.fallback_url height=post.media.reddit_video.height width=post.media.reddit_video.width controls).controlled-width
                           else if post.thumbnail == "self"
                             p.mb-1!= post.selftext_html
-                          else
-                            img(data-src=post.url).controlled-width
+                          else if post.url
+                            a(href=post.url)
+                              img(data-src=post.url alt=post.domain style="border:0;").controlled-width
                         div.d-flex.w-100.justify-content-between
                           h4.mb-1
                             a(href="https://www.reddit.com"+post.permalink target="_blank")= post.title

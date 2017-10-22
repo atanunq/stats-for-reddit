@@ -73,6 +73,11 @@ function getUpvotedData(user, limit, upvoted){
       } else {
           currentElement.embedPost = true;
       }
+      // if the element has media_embed element, change the iframe's src to data-src
+      // to reduce loading times
+      if(currentElement.media_embed.content){
+        currentElement.media_embed.content = currentElement.media_embed.content.replace('src="','data-src="');
+      }
     }
   }
   return subreddits;

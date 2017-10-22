@@ -4,12 +4,10 @@ html
   body
     include includes/header.pug
     div.container
-      p Charts
       canvas#myChart
     script(src='scripts/Chart.min.js')
     script.
       var ctx = document.getElementById("myChart");
-      console.log(!{data});
       var myChart = new Chart(ctx, {
         type: 'bar',
         data: !{data},
