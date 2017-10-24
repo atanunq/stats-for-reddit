@@ -98,4 +98,16 @@ module.exports = function(app){
     })
     res.render("success");
   })
+  app.get('/logout', function (req, res) {
+    instancePromise = null;
+    // change in production
+    res.render('index', {
+      doNotShowHeaders: true
+    });
+  })
+  app.get('/:url', function (req, res){
+    res.render("error", {
+      url: req.params.url
+    });
+  })
 }
