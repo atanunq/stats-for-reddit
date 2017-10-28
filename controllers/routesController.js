@@ -1,4 +1,7 @@
 const moment = require('moment');
+
+// if the post has a .gifv extention, change it to .gif
+// this allows the img tag to play gfycat content
 function changeGifvExtention(url) {
     var parts = url.split(".");
     if (parts[parts.length - 1] == "gifv") {
@@ -6,21 +9,27 @@ function changeGifvExtention(url) {
     }
     return parts.join('.');
 }
+
+// gets the user's latest upvotes and orders the authors by number of upvotes
 function showUpvotedAuthors(user, limit, res){
   var authorNames = [];
   user.getUpvotedContent({limit:limit}).then(upvoted => {
+    // populate the array with author names
     for (var i = 0; i < upvoted.length; i++) {
       authorNames.push(upvoted[i].author.name);
     }
     var counts = {};
+    // counts how many times each author appears in the array
     authorNames.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
     var authors = [];
     for (var author in counts) {
         authors.push([author, counts[author]]);
     }
+    // sort the array such that the most upvoted is on the top
     authors.sort(function(a, b) {
         return b[1] - a[1];
     });
+    // render the authors view with the data
     res.render('authors', {
         user: user,
         limit: limit,
@@ -28,6 +37,8 @@ function showUpvotedAuthors(user, limit, res){
       });
   })
 }
+
+// returns an array of the upvoted subreddits and data about each post
 function getUpvotedData(user, limit, upvoted){
   var subredditNames = [];
   for (var i = 0; i < upvoted.length; i++) {
@@ -37,6 +48,7 @@ function getUpvotedData(user, limit, upvoted){
     });
   }
   var subreddits = [];
+  // loop through subredditNames and structure the data into subreddits[]
   subredditNames.forEach(function(x) {
     var found = false;
     for(var i = 0; i < subreddits.length; i++) {
@@ -82,12 +94,12 @@ function getUpvotedData(user, limit, upvoted){
   }
   return subreddits;
 }
+
+// get the data and render the upvoted view
 function showUpvoted(user, limit, res){
   user.getUpvotedContent({limit: limit}).then(upvoted => {
     var data = getUpvotedData(user, limit, upvoted);
 
-    //console.log(subreddits[0].posts[0].subreddit_name_prefixed);
-    //console.log(subreddits['r/Dota2'])
     res.render('upvoted', {
         subreddits: data,
         user: user,
@@ -95,6 +107,7 @@ function showUpvoted(user, limit, res){
       });
   });
 }
+// export the functions from the controller
 module.exports = {
   showUpvotedAuthors: showUpvotedAuthors,
   getUpvotedData: getUpvotedData,

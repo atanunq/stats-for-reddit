@@ -11,7 +11,7 @@ $(".plus").next().on('show.bs.collapse', function(e){
   }
 });
 
-// on clicking the plus hid the content that was loaded with the above function
+// on clicking the plus hide the content that was loaded with the above function
 $(".plus").next().on('hidden.bs.collapse', function(e){
   var elements = $(e.target).find('img.controlled-width, video, iframe');
   for(var i=0;i<elements.length;i++){

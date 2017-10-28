@@ -7,19 +7,31 @@ html
       h2 Most upvoted subreddits by u/#{user.name} with a limit of #{limit}
       div.row
         div.panel-group#accordion.parent-accordion
+          
+          // loop through the subreddit array
           each subreddit, i in subreddits
+            
+            // line with name and count
             div.panel.panel-default
               div.panel-heading
                 h4.panel-title
                   a(data-toggle="collapse" data-parent="#accordion" href="#collapse"+i)= subreddit.subreddit_name
                   span.badge.badge-default.counter= subreddits[i].count
+                  
+              // opens up when a subreddit_name is clicked
               div(id="collapse"+i).panel-collapse.collapse
                 div.panel-body
                   ul.list-group
+                    
+                    // loops through individual posts in a subreddit
                     each post, j in subreddit.posts
                       li.list-group-item
+                        // plus!
                         img(data-toggle="collapse" href="#collapse"+i+"-"+j src='/img/plus.png').plus
+                        
+                        // the post's content
                         div(id="collapse"+i+"-"+j).panel-collapse.collapse
+                          // check how to display the media
                           if post.media_embed.content
                             != post.media_embed.content
                           else if post.embedPost
@@ -29,6 +41,8 @@ html
                           else if post.url
                             a(href=post.url)
                               img(data-src=post.url alt=post.domain style="border:0;").controlled-width
+                              
+                        // title, author and posted date
                         div.d-flex.w-100.justify-content-between
                           h4.mb-1
                             a(href="https://www.reddit.com"+post.permalink target="_blank")= post.title
