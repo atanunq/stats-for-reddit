@@ -7,6 +7,7 @@ app.set('view engine', 'pug');
 
 //folder structure
 app.use(express.static(__dirname + '/public'));
+// when given src="/scripts/some-file" if will look for it in the chart.js folder
 app.use('/scripts', express.static(__dirname + '/node_modules/chart.js/dist/'));
 
 //import routing file and run it with the app variable
