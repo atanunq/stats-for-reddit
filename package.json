@@ -1,5 +1,5 @@
 {
-  "name": "reddit-stats",
+  "name": "stats-for-reddit",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,20 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atanunq/reddit-stats.git"
+    "url": "git+https://github.com/atanunq/stats-for-reddit.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/atanunq/reddit-stats/issues"
+    "url": "https://github.com/atanunq/stats-for-reddit/issues"
   },
-  "homepage": "https://github.com/atanunq/reddit-stats#readme",
+  "homepage": "https://github.com/atanunq/stats-for-reddit#readme",
   "dependencies": {
     "chart.js": "^2.7.0",
     "express": "^4.15.3",
     "moment": "^2.18.1",
     "pug": "^2.0.0-rc.2",
-    "request": "^2.81.0",
     "snoowrap": "^1.14.1"
   }
 }

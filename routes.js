@@ -107,6 +107,7 @@ module.exports = function(app){
       var authenticationUrl = snoowrap.getAuthUrl({
         clientId: clientId,
         scope: ['identity history read'],
+        // must be equal to the one in the Reddit web app settings
         redirectUri: 'http://localhost:3000/success',
         permanent: false,
         state: 'fe211bebc52eb3da9bef8db6e63104d3'
@@ -125,6 +126,7 @@ module.exports = function(app){
       userAgent: 'stats-for-reddit 1.0.0 by u/atanunq',
       clientId: clientId,
       clientSecret: clientSecret,
+      // must be equal to the one in the Reddit web app settings
       redirectUri: 'http://localhost:3000/success'
     });
     res.render("success");
