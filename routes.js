@@ -1,7 +1,7 @@
 // constants
 const express = require('express');
-const app = express();
 const snoowrap = require('snoowrap');
+const app = express();
 
 //controllers
 const routeCtrl = require('./controllers/routesController');
@@ -77,23 +77,6 @@ module.exports = function(app){
     instancePromise.then(r => {
       r.getMe().then(user => {
         routeCtrl.showUpvotedAuthors(user,50,res)
-      });
-    });
-  });
-
-  // sandbox page to experiment with new stuff
-  app.get('/sandbox', function(req, res){
-    instancePromise.then(r => {
-      r.getSubmission('74f01f').fetch().then(post => {
-        if (!post.media) {
-          post.url = changeGifvExtention(post.url);
-          post.embedPost = false;
-        } else {
-          post.embedPost = true;
-        }
-        res.render('sandbox', {
-          post: post
-        });
       });
     });
   });
