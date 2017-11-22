@@ -1,15 +1,5 @@
 const moment = require('moment');
 
-// if the post has a .gifv extention, change it to .gif
-// this allows the img tag to play gfycat content
-function changeGifvExtention(url) {
-    var parts = url.split(".");
-    if (parts[parts.length - 1] == "gifv") {
-        parts[parts.length - 1] = "gif";
-    }
-    return parts.join('.');
-}
-
 // gets the user's latest upvotes and orders the authors by number of upvotes
 function showUpvotedAuthors(user, limit, res){
   var authorNames = [];
@@ -48,6 +38,7 @@ function getUpvotedData(user, limit, upvoted){
     });
   }
   var subreddits = [];
+
   // loop through subredditNames and structure the data into subreddits[]
   subredditNames.forEach(function(x) {
     var found = false;
@@ -71,6 +62,7 @@ function getUpvotedData(user, limit, upvoted){
   subreddits.sort(function (a, b) {
       return b.count - a.count;
   });
+
   // add postedAgo and postedDate properties to every element
   for(var i = 0; i < subreddits.length; i++) {
     for(var j = 0;j < subreddits[i].posts.length; j++){
@@ -107,9 +99,46 @@ function showUpvoted(user, limit, res){
       });
   });
 }
+
+function showDomains(data, res){
+  var domainNames = [];
+  // populate the array with domain names
+  for (var i = 0; i < data.length; i++) {
+    domainNames.push(data[i].domain);
+  }
+  var counts = {};
+  // counts how many times each domain appears in the array
+  domainNames.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
+  var domains = [];
+  for (var domain in counts) {
+      domains.push([domain, counts[domain]]);
+  }
+  // sort the array such that the most frequent domain is on the top
+  domains.sort(function(a, b) {
+      return b[1] - a[1];
+  });
+
+  //display the result
+  res.render('domains', {
+    domains: domains,
+    length: data.length
+  });
+}
+
+// if the post has a .gifv extention, change it to .gif
+// this allows the img tag to play gfycat content
+function changeGifvExtention(url) {
+    var parts = url.split(".");
+    if (parts[parts.length - 1] == "gifv") {
+        parts[parts.length - 1] = "gif";
+    }
+    return parts.join('.');
+}
+
 // export the functions from the controller
 module.exports = {
   showUpvotedAuthors: showUpvotedAuthors,
   getUpvotedData: getUpvotedData,
-  showUpvoted: showUpvoted
+  showUpvoted: showUpvoted,
+  showDomains: showDomains
 }

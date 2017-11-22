@@ -7,6 +7,13 @@ const app = express();
 const routeCtrl = require('./controllers/routesController');
 const chartsCtrl = require('./controllers/chartsController');
 
+//variables for the amount of posts processed
+const upvotedCount = 100;
+const authorCount = 100;
+const chartCount = 100;
+const keysID = "5sl52a";
+
+
 // promise renturned after Reddit's API authentication
 var instancePromise = null;
 
@@ -29,7 +36,7 @@ module.exports = function(app){
     try{
       instancePromise.then(r => {
         r.getMe().then(user => {
-          routeCtrl.showUpvoted(user,100,res)
+          routeCtrl.showUpvoted(user, upvotedCount, res);
         });
       });
     }
@@ -42,7 +49,7 @@ module.exports = function(app){
   app.get('/upvoted', function (req, res) {
     instancePromise.then(r => {
       r.getMe().then(user => {
-        routeCtrl.showUpvoted(user,100,res)
+        routeCtrl.showUpvoted(user, upvotedCount, res);
       });
     });
   });
@@ -51,7 +58,7 @@ module.exports = function(app){
   app.get('/keys', function (req, res) {
     instancePromise.then(r => {
       //get a post with an ID and print its properties and values
-      r.getSubmission('5sl52a').fetch().then(post => {
+      r.getSubmission(keysID).fetch().then(post => {
         res.render('keys',{
           post: post
         });
@@ -61,13 +68,20 @@ module.exports = function(app){
 
   // handle routes to /charts
   app.get('/charts', function(req, res) {
-    var limit = 100;
     instancePromise.then(r => {
       r.getMe().then(user => {
-        user.getUpvotedContent({limit: limit}).then(upvoted => {
-          var data = routeCtrl.getUpvotedData(user, limit, upvoted);
-          chartsCtrl.createChart(data, limit, res);
+        user.getUpvotedContent({limit: chartCount}).then(upvoted => {
+          var data = routeCtrl.getUpvotedData(user, chartCount, upvoted);
+          chartsCtrl.createChart(data, chartCount, res);
         });
+      });
+    });
+  });
+
+  app.get('/domains', function (req, res){
+    instancePromise.then(r => {
+      r.getSubreddit('all').getTop({time: 'day', limit: Infinity}).then(data => {
+        routeCtrl.showDomains(data, res);
       });
     });
   });
@@ -76,9 +90,9 @@ module.exports = function(app){
   app.get('/authors', function(req, res){
     instancePromise.then(r => {
       r.getMe().then(user => {
-        routeCtrl.showUpvotedAuthors(user,50,res)
+        routeCtrl.showUpvotedAuthors(user,authorCount,res);
       });
-    });
+    })
   });
 
   // get environment variables for the web app

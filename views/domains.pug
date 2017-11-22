@@ -1,0 +1,11 @@
+html
+  head
+    title Upvoted authors
+  body
+    include includes/header.pug
+    h2 List of most frequent domains in r/all with limit #{length}
+    ul
+      each domain, i in domains
+        li
+          = domain[0]
+          = " - " + domain[1]
