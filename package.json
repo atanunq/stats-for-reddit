@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/atanunq/stats-for-reddit#readme",
   "dependencies": {
-    "chart.js": "^2.7.0",
+    "chart.js": "^2.7.3",
     "express": "^4.15.3",
     "moment": "^2.18.1",
-    "pug": "^2.0.0-rc.2",
+    "pug": "^2.0.3",
     "snoowrap": "^1.14.1"
   }
 }
