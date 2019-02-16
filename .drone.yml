@@ -1,8 +1,8 @@
 pipeline:
-        install:
-                image: node
-                commands:
-                        - node -v
-                        - npm -v
-                        - npm install
-                        - npm run test
+  install:
+    image: node
+    commands:
+      - node -v
+      - npm -v
+      - npm install
+      - npm run test
