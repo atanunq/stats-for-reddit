@@ -1,7 +1,6 @@
 // constants
 const express = require('express');
 const snoowrap = require('snoowrap');
-const app = express();
 
 //controllers
 const routeCtrl = require('./controllers/routesController');
@@ -11,8 +10,16 @@ const chartsCtrl = require('./controllers/chartsController');
 const upvotedCount = 100;
 const authorCount = 100;
 const chartCount = 100;
+const domainCount = 100;
 const keysID = "5sl52a";
 
+//get environment variables for the web app
+const clientId = process.env.REDDIT_CLIENT_ID;
+const clientSecret = process.env.REDDIT_CLIENT_SECRET;
+
+//value must match the value provided when creating the Web App from Reddit
+const redirectUri = 'http://localhost:3000/success';
+const state = 'fe211bebc52eb3da9bef8db6e63104d3';
 
 // promise renturned after Reddit's API authentication
 var instancePromise = null;
@@ -20,7 +27,7 @@ var instancePromise = null;
 //function to be exproted to the index.js
 module.exports = function(app){
   app.use(function (req, res, next) {
-    if(instancePromise || req.originalUrl == '/authenticate' || req.query.state == "fe211bebc52eb3da9bef8db6e63104d3") {
+    if(instancePromise || req.originalUrl == '/authenticate' || req.query.state == state) {
       // allow the user to route
       next();
     }
@@ -80,7 +87,7 @@ module.exports = function(app){
 
   app.get('/domains', function (req, res){
     instancePromise.then(r => {
-      r.getSubreddit('all').getTop({time: 'day', limit: Infinity}).then(data => {
+      r.getSubreddit('all').getTop({time: 'day', limit: domainCount}).then(data => {
         routeCtrl.showDomains(data, res);
       });
     });
@@ -95,19 +102,14 @@ module.exports = function(app){
     })
   });
 
-  // get environment variables for the web app
-  const clientId = process.env.REDDIT_CLIENT_ID;
-  const clientSecret = process.env.REDDIT_CLIENT_SECRET;
-
   // send the user to the Reddit page to authenticate
   app.get('/authenticate', function(req, res){
       var authenticationUrl = snoowrap.getAuthUrl({
         clientId: clientId,
         scope: ['identity history read'],
-        // must be equal to the one in the Reddit web app settings
-        redirectUri: 'http://localhost:3000/success',
+        redirectUri: redirectUri,
         permanent: false,
-        state: 'fe211bebc52eb3da9bef8db6e63104d3'
+        state: state
     });
     res.redirect(authenticationUrl);
   });
@@ -123,8 +125,7 @@ module.exports = function(app){
       userAgent: 'stats-for-reddit 1.0.0 by u/atanunq',
       clientId: clientId,
       clientSecret: clientSecret,
-      // must be equal to the one in the Reddit web app settings
-      redirectUri: 'http://localhost:3000/success'
+      redirectUri: redirectUri
     });
     res.render("success");
   });
